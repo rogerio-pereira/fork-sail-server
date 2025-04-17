@@ -23,6 +23,7 @@ Route::get('/{name}', function (Request $request, $name) {
         'mailpit',
         'selenium',
         'soketi',
+        'mongodb',
     ];
 
     $availableFrontends = [
