@@ -32,11 +32,16 @@ Route::get('/{name}', function (Request $request, $name) {
         'livewire-class-components',
     ];
 
+    $availableAuthentication = [
+        'workos',
+    ];
+
     $php = $request->query('php', '84');
 
     $with = array_unique(explode(',', $request->query('with', 'mysql,redis,meilisearch,mailpit,selenium')));
 
     $frontend = $request->query('frontend', 'livewire');
+    $auth = $request->query('auth', null);
 
     try {
         Validator::validate(
@@ -45,6 +50,7 @@ Route::get('/{name}', function (Request $request, $name) {
                 'php' => $php,
                 'with' => $with,
                 'frontend' => $frontend,
+                'auth' => $auth,
             ],
             [
                 'name' => 'string|alpha_dash',
@@ -57,6 +63,7 @@ Route::get('/{name}', function (Request $request, $name) {
                 ],
 
                 'frontend' => ['string', Rule::in($availableFrontends)],
+                'auth' => ['nullable', 'string', Rule::in($availableAuthentication)],
             ]
         );
     } catch (ValidationException $e) {
@@ -77,6 +84,10 @@ Route::get('/{name}', function (Request $request, $name) {
         if (array_key_exists('frontend', $errors)) {
             return response('Invalid frontend. Please provide one supported frontend ('.implode(', ', $availableFrontends).') or leave it empty (it will use livewire).', 400);
         }
+
+        if (array_key_exists('auth', $errors)) {
+            return response('Invalid Authentication Provider. Please provide one supported Authentication Provider ('.implode(', ', $availableAuthentication).') or leave it empty (it will use laravel).', 400);
+        }
     }
 
     $services = implode(' ', $with);
@@ -88,9 +99,16 @@ Route::get('/{name}', function (Request $request, $name) {
     //Prepend -- to frontend, auth and test
     $frontend = ($frontend) ? "--{$frontend}" : null;
 
+    /*
+     * Adding a trailing space because if not on all tests i have to fix to 
+     *      laravel new example-app --livewire  --no-interaction
+     * It will have two spaces after --livewire
+     */
+    $auth = ($auth) ? "--{$auth} " : null;
+
     $script = str_replace(
-        ['{{ php }}', '{{ name }}', '{{ frontend }}', '{{ with }}', '{{ devcontainer }}', '{{ services }}'],
-        [$php, $name, "$frontend",  $with, $devcontainer, $services],
+        ['{{ php }}', '{{ name }}', '{{ frontend }}', '{{ authProvider }} ', '{{ with }}', '{{ devcontainer }}', '{{ services }}'],
+        [$php, $name, "$frontend", "$auth",  $with, $devcontainer, $services],
         file_get_contents(resource_path('scripts/php.sh'))
     );
 
