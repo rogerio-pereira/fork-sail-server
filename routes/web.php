@@ -14,6 +14,7 @@ Route::get('/{name}', function (Request $request, $name) {
         'mysql',
         'pgsql',
         'mariadb',
+        'mongodb',
         'redis',
         'valkey',
         'memcached',
@@ -23,7 +24,6 @@ Route::get('/{name}', function (Request $request, $name) {
         'mailpit',
         'selenium',
         'soketi',
-        'mongodb',
     ];
 
     $availableFrontends = [
