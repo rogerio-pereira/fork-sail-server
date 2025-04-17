@@ -36,12 +36,18 @@ Route::get('/{name}', function (Request $request, $name) {
         'workos',
     ];
 
+    $availableTestFrameworks = [
+        'phpunit',
+        'pest',
+    ];
+
     $php = $request->query('php', '84');
 
     $with = array_unique(explode(',', $request->query('with', 'mysql,redis,meilisearch,mailpit,selenium')));
 
     $frontend = $request->query('frontend', 'livewire');
     $auth = $request->query('auth', null);
+    $tests = $request->query('tests', 'pest');
 
     try {
         Validator::validate(
@@ -51,6 +57,7 @@ Route::get('/{name}', function (Request $request, $name) {
                 'with' => $with,
                 'frontend' => $frontend,
                 'auth' => $auth,
+                'tests' => $tests,
             ],
             [
                 'name' => 'string|alpha_dash',
@@ -64,6 +71,7 @@ Route::get('/{name}', function (Request $request, $name) {
 
                 'frontend' => ['string', Rule::in($availableFrontends)],
                 'auth' => ['nullable', 'string', Rule::in($availableAuthentication)],
+                'tests' => ['string', Rule::in($availableTestFrameworks)],
             ]
         );
     } catch (ValidationException $e) {
@@ -88,6 +96,10 @@ Route::get('/{name}', function (Request $request, $name) {
         if (array_key_exists('auth', $errors)) {
             return response('Invalid Authentication Provider. Please provide one supported Authentication Provider ('.implode(', ', $availableAuthentication).') or leave it empty (it will use laravel).', 400);
         }
+
+        if (array_key_exists('tests', $errors)) {
+            return response('Invalid testing framework. Please provide one supported testing framework ('.implode(', ', $availableTestFrameworks).') or leave it empty (it will use pest).', 400);
+        }
     }
 
     $services = implode(' ', $with);
@@ -98,6 +110,7 @@ Route::get('/{name}', function (Request $request, $name) {
 
     //Prepend -- to frontend, auth and test
     $frontend = ($frontend) ? "--{$frontend}" : null;
+    $testFramework = ($tests) ? "--{$tests}" : null;
 
     /*
      * Adding a trailing space because if not on all tests i have to fix to 
@@ -107,8 +120,8 @@ Route::get('/{name}', function (Request $request, $name) {
     $auth = ($auth) ? "--{$auth} " : null;
 
     $script = str_replace(
-        ['{{ php }}', '{{ name }}', '{{ frontend }}', '{{ authProvider }} ', '{{ with }}', '{{ devcontainer }}', '{{ services }}'],
-        [$php, $name, "$frontend", "$auth",  $with, $devcontainer, $services],
+        ['{{ php }}', '{{ name }}', '{{ frontend }}', '{{ authProvider }} ', '{{ testFramework }}', '{{ with }}', '{{ devcontainer }}', '{{ services }}'],
+        [$php, $name, "$frontend", "$auth", "$testFramework", $with, $devcontainer, $services],
         file_get_contents(resource_path('scripts/php.sh'))
     );
 

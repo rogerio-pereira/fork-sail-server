@@ -12,7 +12,7 @@ docker run --rm \
     -v "$(pwd)":/opt \
     -w /opt \
     laravelsail/php{{ php }}-composer:latest \
-    bash -c "composer global update laravel/installer && laravel new {{ name }} {{ frontend }} {{ authProvider }} --no-interaction && cd {{ name }} && php ./artisan sail:install --with={{ with }} {{ devcontainer }}"
+    bash -c "composer global update laravel/installer && laravel new {{ name }} {{ frontend }} {{ authProvider }} {{ testFramework }} --no-interaction && cd {{ name }} && php ./artisan sail:install --with={{ with }} {{ devcontainer }}"
 
 cd {{ name }}
 
