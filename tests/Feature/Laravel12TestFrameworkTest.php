@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class Laravel12TestFrameworkTest extends TestCase
 {
-    public function test_it_accepts_no_authentication_and_uses_pest()
+    public function test_it_accepts_no_test_and_uses_pest()
     {
         $response = $this->get('/example-app');
 
