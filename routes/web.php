@@ -25,9 +25,18 @@ Route::get('/{name}', function (Request $request, $name) {
         'soketi',
     ];
 
+    $availableFrontends = [
+        'react',
+        'vue',
+        'livewire',
+        'livewire-class-components',
+    ];
+
     $php = $request->query('php', '84');
 
     $with = array_unique(explode(',', $request->query('with', 'mysql,redis,meilisearch,mailpit,selenium')));
+
+    $frontend = $request->query('frontend', 'livewire');
 
     try {
         Validator::validate(
@@ -35,6 +44,7 @@ Route::get('/{name}', function (Request $request, $name) {
                 'name' => $name,
                 'php' => $php,
                 'with' => $with,
+                'frontend' => $frontend,
             ],
             [
                 'name' => 'string|alpha_dash',
@@ -45,6 +55,8 @@ Route::get('/{name}', function (Request $request, $name) {
                     'string',
                     count($with) === 1 && in_array('none', $with) ? Rule::in(['none']) : Rule::in($availableServices)
                 ],
+
+                'frontend' => ['string', Rule::in($availableFrontends)],
             ]
         );
     } catch (ValidationException $e) {
@@ -61,6 +73,10 @@ Route::get('/{name}', function (Request $request, $name) {
         if (array_key_exists('with', $errors)) {
             return response('Invalid service name. Please provide one or more of the supported services ('.implode(', ', $availableServices).') or "none".', 400);
         }
+
+        if (array_key_exists('frontend', $errors)) {
+            return response('Invalid frontend. Please provide one supported frontend ('.implode(', ', $availableFrontends).') or leave it empty (it will use livewire).', 400);
+        }
     }
 
     $services = implode(' ', $with);
@@ -69,9 +85,12 @@ Route::get('/{name}', function (Request $request, $name) {
 
     $devcontainer = $request->has('devcontainer') ? '--devcontainer' : '';
 
+    //Prepend -- to frontend, auth and test
+    $frontend = ($frontend) ? "--{$frontend}" : null;
+
     $script = str_replace(
-        ['{{ php }}', '{{ name }}', '{{ with }}', '{{ devcontainer }}', '{{ services }}'],
-        [$php, $name, $with, $devcontainer, $services],
+        ['{{ php }}', '{{ name }}', '{{ frontend }}', '{{ with }}', '{{ devcontainer }}', '{{ services }}'],
+        [$php, $name, "$frontend",  $with, $devcontainer, $services],
         file_get_contents(resource_path('scripts/php.sh'))
     );
 
