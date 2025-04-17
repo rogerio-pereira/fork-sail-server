@@ -13,7 +13,7 @@ class Laravel12AuthTest extends TestCase
         $response = $this->get('/example-app');
 
         $response->assertStatus(200);
-        $response->assertSee('laravel new example-app --livewire --no-interaction', false);
+        $response->assertSee('laravel new example-app --livewire --pest --no-interaction', false);
     }
 
     public function test_it_accepts_auth_workos()
@@ -21,7 +21,7 @@ class Laravel12AuthTest extends TestCase
         $response = $this->get('/example-app?auth=workos');
 
         $response->assertStatus(200);
-        $response->assertSee('laravel new example-app --livewire --workos --no-interaction', false);
+        $response->assertSee('laravel new example-app --livewire --workos --pest --no-interaction', false);
     }
     
     public function test_it_does_not_accept_invalid_auth()
