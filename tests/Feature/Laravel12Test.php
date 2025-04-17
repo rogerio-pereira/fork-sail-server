@@ -13,6 +13,6 @@ class Laravel12Test extends TestCase
         $response = $this->get('/example-app');
 
         $response->assertStatus(200);
-        $response->assertSee('bash -c "composer global update laravel/installer && laravel new example-app --livewire --pest --no-interaction && cd example-app && php ./artisan sail:install --with=mysql,redis,meilisearch,mailpit,selenium "', false);
+        $response->assertSee('bash -c "composer global require laravel/installer && rm /usr/bin/laravel && ln -s ~/.composer/vendor/bin/laravel /usr/bin/laravel && laravel new example-app --livewire --pest --no-interaction && cd example-app && php ./artisan sail:install --with=mysql,redis,meilisearch,mailpit,selenium "', false);
     }
 }
