@@ -68,12 +68,19 @@ class SailServerTest extends TestCase
         $response->assertSee('Invalid site name. Please only use alpha-numeric characters, dashes, and underscores.');
     }
 
-    public function test_it_does_not_accept_empty_php_query_if_present()
+    // public function test_it_does_not_accept_empty_php_query_if_present()
+    // {
+    //     $response = $this->get('/example-app?php');
+
+    //     $response->assertStatus(400);
+    //     $response->assertSee('Invalid PHP version. Please specify a supported version (74, 80, 81, 82, 83, or 84).');
+    // }
+    public function test_it_does_accept_empty_php_and_uses_php_84()
     {
         $response = $this->get('/example-app?php');
 
-        $response->assertStatus(400);
-        $response->assertSee('Invalid PHP version. Please specify a supported version (74, 80, 81, 82, 83, or 84).');
+        $response->assertStatus(200);
+        $response->assertSee('laravelsail/php84-composer:latest');
     }
 
     public function test_it_does_not_accept_invalid_php_versions()
@@ -84,12 +91,20 @@ class SailServerTest extends TestCase
         $response->assertSee('Invalid PHP version. Please specify a supported version (74, 80, 81, 82, 83, or 84).');
     }
 
-    public function test_it_does_not_accept_empty_with_query_when_present()
+    // public function test_it_does_not_accept_empty_with_query_when_present()
+    // {
+    //     $response = $this->get('/example-app?with');
+
+    //     $response->assertStatus(400);
+    //     $response->assertSee('Invalid service name. Please provide one or more of the supported services (mysql, pgsql, mariadb, mongodb, redis, rabbitmq, valkey, memcached, meilisearch, typesense, minio, mailpit, selenium, soketi) or "none".', false);
+    // }
+
+    public function test_it_does_accept_empty_with_query_and_use_default_services()
     {
         $response = $this->get('/example-app?with');
 
-        $response->assertStatus(400);
-        $response->assertSee('Invalid service name. Please provide one or more of the supported services (mysql, pgsql, mariadb, mongodb, redis, valkey, memcached, meilisearch, typesense, minio, mailpit, selenium, soketi) or "none".', false);
+        $response->assertStatus(200);
+        $response->assertSee('php ./artisan sail:install --with=mysql,redis,meilisearch,mailpit,selenium');
     }
 
     public function test_it_does_not_accept_invalid_services()
@@ -97,7 +112,7 @@ class SailServerTest extends TestCase
         $response = $this->get('/example-app?with=redis,invalid_service_name');
 
         $response->assertStatus(400);
-        $response->assertSee('Invalid service name. Please provide one or more of the supported services (mysql, pgsql, mariadb, mongodb, redis, valkey, memcached, meilisearch, typesense, minio, mailpit, selenium, soketi) or "none".', false);
+        $response->assertSee('Invalid service name. Please provide one or more of the supported services (mysql, pgsql, mariadb, mongodb, redis, rabbitmq, valkey, memcached, meilisearch, typesense, minio, mailpit, selenium, soketi) or "none".', false);
     }
 
     public function test_it_does_not_accept_none_with_other_services()
@@ -105,6 +120,6 @@ class SailServerTest extends TestCase
         $response = $this->get('/example-app?with=none,redis');
 
         $response->assertStatus(400);
-        $response->assertSee('Invalid service name. Please provide one or more of the supported services (mysql, pgsql, mariadb, mongodb, redis, valkey, memcached, meilisearch, typesense, minio, mailpit, selenium, soketi) or "none".', false);
+        $response->assertSee('Invalid service name. Please provide one or more of the supported services (mysql, pgsql, mariadb, mongodb, redis, rabbitmq, valkey, memcached, meilisearch, typesense, minio, mailpit, selenium, soketi) or "none".', false);
     }
 }
