@@ -1,0 +1,34 @@
+html, body, #app {
+    height: 100%;
+}
+
+html {
+    background-color: rgb(var(--v-theme-background));
+    color: rgb(var(--v-theme-on-surface));
+}
+  
+html h1,
+html h2,
+html h3,
+html h4,
+html h5,
+html h6,
+html p,
+html span,
+html a {
+    color: rgb(var(--v-theme-on-surface));
+}
+
+html a {
+    color: rgb(var(--v-theme-primary));
+    text-decoration: none;
+}
+
+html a:hover {
+    color: rgb(var(--v-theme-primary-darken-1));
+}
+
+body {
+    background-color: rgb(var(--v-theme-background));
+    min-height: 100vh;
+}

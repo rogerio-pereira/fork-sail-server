@@ -10,21 +10,23 @@ export default createVuetify({
     theme: {
         defaultTheme: 'light',
         themes: {
-            dark: {
-                dark: true,
+            light: {
+                dark: false,
                 colors: {
-                    background:         '#12181B',
-                    surface:            '#1C252B',
-                    'surface-variant':  '#263238',
-                    'surface-bright':   '#B0BEC5',
-                    'on-surface':       '#B0BEC5',
-                    primary:            '#455A64',
-                    'primary-darken-1': '#90A4AE',
-                    secondary:          '#78909C',
-                    error:              '#FF5252',
-                    success:            '#4CAF50',
-                    warning:            '#FFC107',
-                    info:               '#29B6F6',
+                    background: '#0288D1',           // bold sea blue (deep water)
+                    surface: '#E0F7FA',              // light aqua (card backgrounds)
+                    'surface-variant': '#B2EBF2',    // a touch deeper (hover/variant)
+                    'surface-bright': '#FFFFFF',     // pure white for sharp contrast if needed
+                    'on-surface': '#004D40',         // deep teal for text/icons
+
+                    primary: '#4DD0E1',              // turquoise (pops on dark blue)
+                    'primary-darken-1': '#26C6DA',   // deeper turquoise (hover)
+                    secondary: '#81D4FA',            // sky blue (nice accent)
+
+                    error: '#E53935',
+                    success: '#43A047',
+                    warning: '#FB8C00',
+                    info: '#00ACC1',
                 },
             },
         },
