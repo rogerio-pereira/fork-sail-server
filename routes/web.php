@@ -14,6 +14,7 @@ Route::get('/{name}', function (Request $request, $name) {
         'mysql',
         'pgsql',
         'mariadb',
+        'mongodb',
         'redis',
         'rabbitmq',
         'valkey',
@@ -26,9 +27,29 @@ Route::get('/{name}', function (Request $request, $name) {
         'soketi',
     ];
 
+    $availableFrontends = [
+        'react',
+        'vue',
+        'livewire',
+        'livewire-class-components',
+    ];
+
+    $availableAuthentication = [
+        'workos',
+    ];
+
+    $availableTestFrameworks = [
+        'phpunit',
+        'pest',
+    ];
+
     $php = $request->query('php', '84');
 
     $with = array_unique(explode(',', $request->query('with', 'mysql,redis,meilisearch,mailpit,selenium')));
+
+    $frontend = $request->query('frontend', 'livewire');
+    $auth = $request->query('auth', null);
+    $tests = $request->query('tests', 'pest');
 
     try {
         Validator::validate(
@@ -36,6 +57,9 @@ Route::get('/{name}', function (Request $request, $name) {
                 'name' => $name,
                 'php' => $php,
                 'with' => $with,
+                'frontend' => $frontend,
+                'auth' => $auth,
+                'tests' => $tests,
             ],
             [
                 'name' => 'string|alpha_dash',
@@ -46,6 +70,10 @@ Route::get('/{name}', function (Request $request, $name) {
                     'string',
                     count($with) === 1 && in_array('none', $with) ? Rule::in(['none']) : Rule::in($availableServices)
                 ],
+
+                'frontend' => ['string', Rule::in($availableFrontends)],
+                'auth' => ['nullable', 'string', Rule::in($availableAuthentication)],
+                'tests' => ['string', Rule::in($availableTestFrameworks)],
             ]
         );
     } catch (ValidationException $e) {
@@ -62,6 +90,18 @@ Route::get('/{name}', function (Request $request, $name) {
         if (array_key_exists('with', $errors)) {
             return response('Invalid service name. Please provide one or more of the supported services ('.implode(', ', $availableServices).') or "none".', 400);
         }
+
+        if (array_key_exists('frontend', $errors)) {
+            return response('Invalid frontend. Please provide one supported frontend ('.implode(', ', $availableFrontends).') or leave it empty (it will use livewire).', 400);
+        }
+
+        if (array_key_exists('auth', $errors)) {
+            return response('Invalid Authentication Provider. Please provide one supported Authentication Provider ('.implode(', ', $availableAuthentication).') or leave it empty (it will use laravel).', 400);
+        }
+
+        if (array_key_exists('tests', $errors)) {
+            return response('Invalid testing framework. Please provide one supported testing framework ('.implode(', ', $availableTestFrameworks).') or leave it empty (it will use pest).', 400);
+        }
     }
 
     $services = implode(' ', $with);
@@ -70,9 +110,20 @@ Route::get('/{name}', function (Request $request, $name) {
 
     $devcontainer = $request->has('devcontainer') ? '--devcontainer' : '';
 
+    //Prepend -- to frontend, auth and test
+    $frontend = ($frontend) ? "--{$frontend}" : null;
+    $testFramework = ($tests) ? "--{$tests}" : null;
+
+    /*
+     * Adding a trailing space because if not on all tests i have to fix to 
+     *      laravel new example-app --livewire  --no-interaction
+     * It will have two spaces after --livewire
+     */
+    $auth = ($auth) ? "--{$auth} " : null;
+
     $script = str_replace(
-        ['{{ php }}', '{{ name }}', '{{ with }}', '{{ devcontainer }}', '{{ services }}'],
-        [$php, $name, $with, $devcontainer, $services],
+        ['{{ php }}', '{{ name }}', '{{ frontend }}', '{{ authProvider }} ', '{{ testFramework }}', '{{ with }}', '{{ devcontainer }}', '{{ services }}'],
+        [$php, $name, "$frontend", "$auth", "$testFramework", $with, $devcontainer, $services],
         file_get_contents(resource_path('scripts/php.sh'))
     );
 

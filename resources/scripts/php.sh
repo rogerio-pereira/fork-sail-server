@@ -12,7 +12,7 @@ docker run --rm \
     -v "$(pwd)":/opt \
     -w /opt \
     laravelsail/php{{ php }}-composer:latest \
-    bash -c "laravel new {{ name }} --no-interaction && cd {{ name }} && php ./artisan sail:install --with={{ with }} {{ devcontainer }}"
+    bash -c "composer global require laravel/installer && rm /usr/bin/laravel && ln -s ~/.composer/vendor/bin/laravel /usr/bin/laravel && laravel new {{ name }} {{ frontend }} {{ authProvider }} {{ testFramework }} --no-interaction && cd {{ name }} && php ./artisan sail:install --with={{ with }} {{ devcontainer }}"
 
 cd {{ name }}
 
@@ -42,11 +42,11 @@ fi
 
 if $SUDO -n true 2>/dev/null; then
     $SUDO chown -R $USER: .
-    echo -e "${BOLD}Get started with:${NC} cd {{ name }} && ./vendor/bin/sail up"
+    echo -e "${BOLD}Get started with:${NC} cd {{ name }} && ./vendor/bin/sail up && ./vendor/bin/sail npm install && ./vendor/bin/sail npm run dev"
 else
     echo -e "${BOLD}Please provide your password so we can make some final adjustments to your application's permissions.${NC}"
     echo ""
     $SUDO chown -R $USER: .
     echo ""
-    echo -e "${BOLD}Thank you! We hope you build something incredible. Dive in with:${NC} cd {{ name }} && ./vendor/bin/sail up"
+    echo -e "${BOLD}Thank you! We hope you build something incredible. Dive in with:${NC} cd {{ name }} && ./vendor/bin/sail up && ./vendor/bin/sail npm install && ./vendor/bin/sail npm run dev"
 fi
