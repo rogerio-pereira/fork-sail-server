@@ -148,7 +148,8 @@
   position: relative;
   width: 100%;
   height: 200px;
-  margin-top: -100px; /* Pulls the waves up */
+  margin-top: -30px; /* Pulls the waves up */
+  z-index: 0 !important;
 }
 
 /* BACK WAVE */
