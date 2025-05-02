@@ -70,7 +70,7 @@
         </svg>
 
         <!-- MASCOT -->
-        <img src="@/assets/sailor.png" class="mascot" alt="Laravel Sailor Mascot" />
+        <img src="@/assets/sailor.png" class="mascot d-none d-lg-block" alt="Laravel Sailor Mascot" />
 
         <!-- FRONT WAVE: 3 layers -->
         <svg
@@ -194,5 +194,20 @@
         transform: translateY(0); 
         rotate: 0deg;
     }
+}
+
+/* Extra small devices (phones, less than 600px) */
+@media (max-width: 599px) {
+    /* your adjustments */
+}
+
+/* Small devices (portrait tablets, 600px and up) */
+@media (min-width: 600px) and (max-width: 959px) {
+    /* your adjustments */
+}
+
+/* Medium devices (landscape tablets, 960px and up) */
+@media (min-width: 960px) and (max-width: 1279px) {
+    /* your adjustments */
 }
 </style>
