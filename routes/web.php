@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Support\Arr;
+use App\Http\Controllers\HomeController;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-Route::redirect('/', 'https://laravel.com/docs', 302);
+Route::get('/', [ HomeController::class, 'index' ]);
 
 Route::get('/{name}', function (Request $request, $name) {
     $availableServices = [
