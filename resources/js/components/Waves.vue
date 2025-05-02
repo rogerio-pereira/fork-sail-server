@@ -30,7 +30,7 @@
                     M0,400 L0,200 C 360,100 1080,300 1440,200 L1440,400 Z
                 "
                 />
-            </path>
+            </path>curl -s 'http://localhost/Laravel?with=pgsql,redis,meilisearch,minio,mailpit,selenium&frontend=livewire&testing=pest' | bash
 
             <path
                 fill="url(#backGradient1)"
@@ -148,7 +148,7 @@
   position: relative;
   width: 100%;
   height: 200px;
-  margin-top: -150px; /* Pulls the waves up */
+  margin-top: -100px; /* Pulls the waves up */
 }
 
 /* BACK WAVE */
@@ -158,7 +158,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: 0 !important;
 }
 
 /* FRONT WAVE */
@@ -168,7 +168,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 3;
+  z-index: 3 !important;
 }
 
 /* MASCOT */
@@ -177,7 +177,7 @@
   bottom: -50px;
   left: 30px;
   height: 500px;
-  z-index: 2;
+  z-index: 2 !important;
   animation: mascotFloat 5s ease-in-out infinite;
 }
 

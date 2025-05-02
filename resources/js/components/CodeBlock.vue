@@ -67,6 +67,6 @@ async function copyCode() {
     }
     .copyButton
     {
-        z-index: 99999;
+        z-index: 999999999 !important;
     }
 </style>
