@@ -184,15 +184,15 @@
 @keyframes mascotFloat {
     0% { 
         transform: translateY(0); 
-        rotate: -12deg;
+        rotate: 0deg;
     }
     50% { 
         transform: translateY(-8px); 
-        rotate: 0deg;
+        rotate: 12deg;
     }
     100% { 
         transform: translateY(0); 
-        rotate: -12deg;
+        rotate: 0deg;
     }
 }
 </style>
