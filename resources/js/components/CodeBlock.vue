@@ -8,7 +8,7 @@
             <div class="position-relative pt-8">
                 <v-btn
                     icon="mdi-content-copy"
-                    class="position-absolute top-0 right-0 ma-2"
+                    class="position-absolute top-0 right-0 ma-2 copyButton"
                     color='primary'
                     @click="copyCode"
                     size="small"
@@ -64,5 +64,9 @@ async function copyCode() {
         color: #ECEFF1;
         font-family: 'Fira Mono', monospace;
         border-radius: 8px;
+    }
+    .copyButton
+    {
+        z-index: 99999;
     }
 </style>
