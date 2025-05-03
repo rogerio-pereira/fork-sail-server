@@ -6,9 +6,9 @@ use Tests\TestCase;
 
 class SailServerTest extends TestCase
 {
-    public function test_the_homepage_redirects_to_the_laravel_docs()
+    public function test_the_homepage()
     {
-        $this->get('/')->assertRedirect('https://laravel.com/docs');
+        $this->get('/')->assertSee('Laravel Sailor');
     }
 
     public function test_it_can_return_the_sail_install_script()
