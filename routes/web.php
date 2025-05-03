@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Models\Stat;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
@@ -127,6 +129,9 @@ Route::get('/{name}', function (Request $request, $name) {
         [$php, $name, "$frontend", "$auth", "$testFramework", $with, $devcontainer, $services],
         file_get_contents(resource_path('scripts/php.sh'))
     );
+
+    $now = Carbon::now();
+    Stat::create(['installed_at' => $now]);
 
     return response($script, 200, ['Content-Type' => 'text/plain']);
 });
