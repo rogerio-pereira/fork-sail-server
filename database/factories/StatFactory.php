@@ -23,7 +23,7 @@ class StatFactory extends Factory
     public function definition()
     {
         return [
-            'installed_at' => Carbon::now(),
+            'installed_at' => fake()->dateTimeThisYear(),
         ];
     }
 }

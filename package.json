@@ -19,6 +19,8 @@
         "@inertiajs/vue3": "^2.0.5",
         "@mdi/font": "^7.4.47",
         "@vitejs/plugin-vue": "^5.2.3",
-        "pinia": "^3.0.1"
+        "chart.js": "^4.4.9",
+        "pinia": "^3.0.1",
+        "vue-chartjs": "^5.3.2"
     }
 }

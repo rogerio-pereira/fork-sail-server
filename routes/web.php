@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\StatsController;
 use App\Models\Stat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 Route::get('/', [ HomeController::class, 'index' ]);
+Route::get('/stats', [ StatsController::class, 'index' ]);
 
 Route::get('/{name}', function (Request $request, $name) {
     $availableServices = [
