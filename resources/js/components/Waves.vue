@@ -205,7 +205,7 @@
     }
     .mascot {
         bottom: 20px;
-        left: 20vw;
+        left: 15vw;
         margin-left: auto;
         margin-right: auto;
     }
